@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="EpidemicPreventionSys-Service" />
+        <module name="EpidemicPreventionSys-web" />
+        <module name="EpidemicPreventionSys-Controller" />
+        <module name="EpidemicPreventionSys-DAO" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="EpidemicPreventionSys" target="1.8" />
+      <module name="EpidemicPreventionSys-Controller" target="1.8" />
+      <module name="EpidemicPreventionSys-DAO" target="1.8" />
+      <module name="EpidemicPreventionSys-Service" target="1.8" />
+      <module name="EpidemicPreventionSys-web" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

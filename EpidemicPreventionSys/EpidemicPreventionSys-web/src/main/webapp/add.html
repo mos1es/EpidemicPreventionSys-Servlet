@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="./image/t.jpg" type="image/x-icon"/>
+    <title>添加</title>
+    <style>
+        #app{
+            margin-left: 200px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<form id="app" action="epidemic" method="post" enctype="multipart/form-data">
+    <table border="1" cellspacing="0" cellpadding="10px" bgcolor="#CCC" width="400px">
+        <caption>添加人员信息</caption>
+        <tr>
+            <th>请选择头像:</th>
+            <td>
+                <input type="file" id="pic" name="pic">
+            </td>
+        </tr>
+        <tr>
+            <th>姓名:</th>
+            <td>
+                <input type="text" name="name">
+            </td>
+        </tr>
+        <tr>
+            <th>电话:</th>
+            <td>
+                <input type="text" id="phone" name="phone">
+            </td>
+        </tr>
+        <tr>
+            <th>身份证号:</th>
+            <td>
+                <input type="text" id="idcard" name="idcard">
+            </td>
+        </tr>
+        <tr>
+            <th>体温:</th>
+            <td><input type="number" step="0.1" id="tmperature" name="tmperature"></td>
+        </tr>
+        <tr>
+            <th>健康状况:</th>
+            <td>
+                <select name="health" id="health">
+                    <option value="正常">==正常==</option>
+                    <option value="普通感冒">==普通感冒==</option>
+                    <option value="呼吸困难">==呼吸困难==</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>是否外地流入:</th>
+            <td>
+                <select name="inflow" id="inflow">
+                    <option value="1">==是==</option>
+                    <option value="0">==否==</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>外地流入地址:</th>
+            <td>
+                <select name="province" id="province" style="width: 80px" onchange="queryCityByProvinceName(this.value)">
+                </select>
+                <select name="city" id="city" style="width: 80px" onchange="queryAreaByCityName(this.value)">
+                </select>
+                <select name="area" id="area"  style="width: 80px">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <th>详细地址:</th>
+            <td>
+                <input type="text" id="info" name="info">
+            </td>
+        </tr>
+        <tr>
+            <th>返济日期:</th>
+            <td>
+                <input type="date" id="returndate" name="returndate">
+            </td>
+        </tr>
+        <tr>
+            <th>在济地址:</th>
+            <td>
+                <input type="text" id="jnaddress" name="jnaddress">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit">添加</button>
+            </td>
+        </tr>
+    </table>
+    <script src="./js/jquery/jquery.min.js"></script>
+    <script src="./js/validate/jquery.validate.min.js"></script>
+    <script src="./js/validate/messages_zh.min.js"></script>
+    <script>
+        $("form").validate({
+            rules:{
+                name:{
+                    required:true,
+                    maxlength:5
+                },
+                phone:{
+                    required:true,
+                    digits:true,
+                    maxlength:11
+                },
+                idcard:{
+                    required:true,
+                    maxlength:18,
+                }
+            },
+            message:{
+                name:{
+                    required: "名字必填",
+                    maxlength: "名字必须小于5位"
+                },
+                phone:{
+                  required:"手机号必填",
+                  digits:"输入正整数",
+                    maxlength:"最大只能11位"
+                },
+                idcard:{
+                    required:"身份证号必填",
+                    maxlength:"需符合身份证规范"
+                }
+
+            }
+        });
+
+
+        $(function(){
+            queryAllProvinces()
+        })
+
+        function queryAllProvinces(){
+            $.post('epidemic','method=queryAllProvinces',msg=>{
+                let ops = '<option value="">==请选择==</option>'
+                $.each(msg,function(i,p){
+                    ops += `<option value="${p.name}">${p.name}</option>`
+                })
+                $('#province').html(ops)
+            },'json')
+        }
+
+        function queryCityByProvinceName(proname){
+            $.post('epidemic','method=queryCityByProvinceName&proname='+proname,msg=>{
+                let ops = '<option value="">==请选择==</option>'
+                $.each(msg,function(i,p){
+                    ops += `<option value="${p.name}">${p.name}</option>`
+                })
+                $('#city').html(ops)
+            },'json')
+        }
+
+        function queryAreaByCityName(cityname){
+            $.post('epidemic','method=queryAreaByCityName&cityname='+cityname,msg=>{
+                let ops = '<option value="">==请选择==</option>'
+                $.each(msg,function(i,p){
+                    ops += `<option value="${p.name}">${p.name}</option>`
+                })
+                $('#area').html(ops)
+            },'json')
+        }
+
+    </script>
+</form>
+</body>
+</html>

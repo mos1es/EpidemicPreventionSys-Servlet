@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="./image/t.jpg" type="image/x-icon"/>
+    <title>列表页</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="./js/jquery/jquery.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/ajaxfileupload.js"></script>
+
+</head>
+<body>
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    条件检索
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-body">
+                <form class="form-inline" role="form">
+                    <div class="form-group">
+                        <label  for="name">名字:</label>
+                        <input type="text" class="form-control" id="name"
+                               name="name" placeholder="名字">
+                    </div>
+                    <div class="form-group">
+                        <label  for="health">身体状况:</label>
+                        <select name="health" id="health">
+                            <option value="">==请选择==</option>
+                            <option value="正常">正常</option>
+                            <option value="普通感冒">普通感冒</option>
+                            <option value="呼吸困难">呼吸困难</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label  for="startdate">日期(开始):</label>
+                        <input type="date" class="form-control" id="startdate"
+                               name="startdate">
+                    </div>
+                    <div class="form-group">
+                        <label  for="enddate">日期(结束):</label>
+                        <input type="date" class="form-control" id="enddate"
+                               name="enddate">
+                    </div>
+                    <div class="form-group">
+                        <label  for="tmperature">体温:</label>
+                        <select name="tmperature" id="tmperature">
+                            <option value="">==请选择==</option>
+                            <option value="1">正常</option>
+                            <option value="2">低热</option>
+                            <option value="3">高热</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label  for="name">外地地址:</label>
+                        <input type="text" class="form-control" id="flowaddress"
+                               name="flowaddress" placeholder="外地地址">
+                    </div>
+                    <button type="button" class="btn btn-success" onclick="queryByCondition()">查询</button>
+                    <button type="button" class="btn btn-warning" onclick="export2Excel()">导出到EXCEL</button>
+                    <button type="button" class="btn btn-primary" onclick="showModal()">批量导入</button>
+                    <button type="button" class="btn btn-danger" onclick="delbat()">批量删除</button>
+                    <button type="button" class="btn btn-info" >重置</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>　<input type="checkbox" id="checkall" onclick="checkall()"> <label for="checkall">全选</label></th>
+        <th>序号</th>
+        <th>头像</th>
+        <th>姓名</th>
+        <th>电话</th>
+        <th>身份证号</th>
+        <th>体温</th>
+        <th>是否外地流入</th>
+        <th>流入地址</th>
+        <th>济南地址</th>
+        <th>返济日期</th>
+    </tr>
+    </thead>
+    <tbody id="data"></tbody>
+</table>
+当前第<span id="pn"></span>页，总共<span id="total"></span>条记录
+<button class="btn btn-primary" type="button" id="first">首页</button>
+<button class="btn btn-danger" type="button" id="pre">上一页</button>
+<button class="btn btn-success" type="button" id="next">下一页</button>
+<button class="btn btn-warning" type="button" id="end">尾页</button>
+
+<!--Modal-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+
+                <form class="form-inline" role="form">
+                    <div class="form-group" style="">
+                        <label for="down">没有模板</label>
+                        <a href="epidemic?method=downtemplate" id="down"><h3>下载</h3></a>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <label for="file">选择文件</label>
+                        <input type="file" class="form-control" id="file" name="file">
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-primary" data-dismiss="modal" onclick="addPic()">批量添加</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    let pn=1,ps=3,pre,next,end,tj="";
+
+    //模态框
+    function showModal() {
+        $("#myModal").modal("show");
+    }
+
+    //批量删除
+    function delbat() {
+        let selections = $("input[name='et2001']:checked");
+        if (selections.length ==0){
+            alert("请至少选择一条记录!");
+            return;
+        }
+        let ids="";
+
+        $.each(selections,function (i,input) {
+            ids+=input.value+",";
+        })
+        alert(ids);
+    }
+
+    function addPic() {
+        $.ajaxFileUpload({
+            type:"post",
+            url:"pic",
+            fileElementId:"file",
+            data:{},
+            dataType:"json",
+            success:msg=>{
+
+            }
+        });
+    }
+
+    //全选
+    function checkall(){
+        $("input[name='2001']").prop("checked",$("#checkall").prop("checked"));
+    }
+
+
+    function queryByCondition() {
+        //重置条件
+        tj="";
+        //1.首先获得条件
+        let name = $("#name").val();
+        let health = $("#health").val();
+        let startdate = $("#startdate").val();
+        let enddate = $("#enddate").val();
+        let tmperature = $("#tmperature").val();
+        let flowaddress = $("#flowaddress").val();
+
+        //2.组装
+        if (name!=""){tj+="&name="+name;}
+        if (health!=""){tj+="&health="+health}
+        if (startdate!=""){tj+="&startdate="+startdate}
+        if(enddate!=""){tj+="&enddate="+enddate}
+        if(tmperature!=""){tj+="&tmperature="+tmperature}
+        if(flowaddress!=""){tj+="&flowaddress="+flowaddress}
+
+        //3.加入查询
+        quaryData(1,ps,tj);
+    }
+
+    $(function () {
+        quaryData(pn,ps,tj);
+
+        $("#first").on("click",function () {
+            quaryData(1,ps,tj);
+        })
+        $("#pre").on("click",function () {
+            quaryData(pre,ps,tj);
+        })
+        $("#next").on("click",function () {
+            quaryData(next,ps,tj);
+        })
+        $("#end").on("click",function () {
+            quaryData(end,ps,tj);
+        })
+    })
+
+
+    function quaryData(pageNumber,pageSize,tj) {
+        $.post("epidemic","method=querySome&pageNumber="+pageNumber+"&pageSize="+pageSize+tj,msg=>{
+            pn = msg.pageNumber;
+            pre= msg.pre;
+            next = msg.next;
+            end = msg.pageCount;
+            $("#pn").text(msg.pageNumber);
+            $("#total").text(msg.total);
+                let trs="";
+                $.each(msg.rows,function (i,p) {
+                    trs +=`<tr><td><input type="checkbox" name="2001"></td>
+                            <td>${msg.start+i+1}</td>
+                            <td><img src="${p.savepath}" width="15px" height="20px"></td>
+                            <td>${p.name}</td><td>${p.phone}</td><td>${p.idcard}</td><td>${p.tmperature}</td>
+                        <td>${p.inflow==1?'是':'否'}</td><td>${p.flowaddress}</td><td>${p.jnaddress}</td><td>${p.date1}</td></tr>`
+                })
+                $("#data").html(trs);
+        },"json")
+    }
+
+    //导出
+    function export2Excel() {
+        //同步
+        window.location.href="epidemic?method=export2Excel";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="EpidemicPreventionSys-web:war exploded">
+    <output-path>$PROJECT_DIR$/EpidemicPreventionSys-web/target/EpidemicPreventionSys-web-1.0-SNAPSHOT</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>EpidemicPreventionSys-web</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="EpidemicPreventionSys-web" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="archive" name="EpidemicPreventionSys-Service-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="EpidemicPreventionSys-Service" />
+          </element>
+          <element id="archive" name="EpidemicPreventionSys-DAO-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="EpidemicPreventionSys-DAO" />
+          </element>
+          <element id="library" level="project" name="Maven: org.projectlombok:lombok:1.18.10" />
+          <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml:4.0.0" />
+          <element id="library" level="project" name="Maven: org.apache.poi:poi-ooxml-schemas:4.0.0" />
+          <element id="library" level="project" name="Maven: org.apache.xmlbeans:xmlbeans:3.0.1" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-compress:1.18" />
+          <element id="library" level="project" name="Maven: com.github.virtuald:curvesapi:1.04" />
+          <element id="library" level="project" name="Maven: org.apache.poi:poi:4.0.0" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.10" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-collections4:4.2" />
+          <element id="library" level="project" name="Maven: commons-dbcp:commons-dbcp:1.4" />
+          <element id="library" level="project" name="Maven: commons-pool:commons-pool:1.5.4" />
+          <element id="library" level="project" name="Maven: com.oracle.database.jdbc:ojdbc6:11.2.0.4" />
+          <element id="library" level="project" name="Maven: com.oracle.database.jdbc:ucp:11.2.0.4" />
+          <element id="library" level="project" name="Maven: com.oracle.database.security:oraclepki:11.2.0.4" />
+          <element id="library" level="project" name="Maven: com.oracle.database.security:osdt_cert:11.2.0.4" />
+          <element id="library" level="project" name="Maven: com.oracle.database.security:osdt_core:11.2.0.4" />
+          <element id="library" level="project" name="Maven: com.oracle.database.ha:simplefan:11.2.0.4" />
+          <element id="library" level="project" name="Maven: com.oracle.database.ha:ons:11.2.0.4" />
+          <element id="library" level="project" name="Maven: commons-dbutils:commons-dbutils:1.6" />
+          <element id="library" level="project" name="Maven: commons-fileupload:commons-fileupload:1.4" />
+          <element id="library" level="project" name="Maven: commons-io:commons-io:2.2" />
+          <element id="library" level="project" name="Maven: com.alibaba:fastjson:1.2.37" />
+          <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.1.0" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/EpidemicPreventionSys-web/target/EpidemicPreventionSys-web-1.0-SNAPSHOT/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="EpidemicPreventionSys-web/web/Web" />
+    </root>
+  </artifact>
+</component>
